@@ -1,0 +1,20 @@
+<html lang="en">
+  <head>
+    <meta name="google-signin-scope" content="profile email">
+    <meta name="google-signin-client_id" content="21143138695-q0f2creh1kb9dvanfhudjj225r1jhb1h.apps.googleusercontent.com">
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+  </head>
+  <body>
+    <div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div>
+    <script>
+      function onSignIn(googleUser) {
+        var   scope =  [
+          'https://www.googleapis.com/auth/admin.directory.user.security',
+          'https://www.googleapis.com/auth/gmail.readonly','https://www.googleapis.com/auth/contacts.readonly','https://www.googleapis.com/auth/contacts','https://www.googleapis.com/auth/userinfo.email','https://www.googleapis.com/auth/userinfo.profile','https://www.googleapis.com/auth/admin.directory.user.readonly']
+        var auth2 = gapi.auth2.getAuthInstance().currentUser
+                            
+         console.log('ok')
+            googleUser.grant(scope)
+    </script>
+  </body>
+</html>
