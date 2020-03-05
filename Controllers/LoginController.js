@@ -46,11 +46,19 @@ exports.jwttoken =  async (req,res,next) => {
       }
     
 }
-exports.checkToken = (req,res,next) => {
-        const token = req.headers['auth-hbg']
-       oAuth2Client.verifyIdToken(token).catch(e => {res.send('not ok')})
-       res.send('ok')
-    
+exports.checkToken =  (req,res) => {
+      const token = req.body.token
+      if(token === null){
+        console.log('ok')
+        res.send({check:false})
+      }
+      else{
+        console.log('not ok')
+        const checkinfo = oAuth2Client.verifyIdToken({idToken:token}).then(respoense => {
+          res.send({check:true})
+        }
+          )
+      }
 }
 exports.Test = (req,res,next)=>{
   res.render('index')

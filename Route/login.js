@@ -7,7 +7,5 @@ app.route('/login')
 app.route('/auth/google/callback')
     .get(LoginController.jwttoken)
 app.route('/checkToken')
-    .get(LoginController.checkToken)
-app.route('/test')
-    .get(LoginController.Test)
+    .post(LoginController.checkToken)
 }

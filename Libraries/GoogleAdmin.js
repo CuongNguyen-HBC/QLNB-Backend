@@ -1,15 +1,16 @@
-const { google } = require('googleapis');
 const fs = require('fs');
 const readline = require('readline');
+const {google} = require('googleapis');
+const path = require('path')
 
 // If modifying these scopes, delete token.json.
 const SCOPES = ['https://www.googleapis.com/auth/admin.directory.user'];
 // The file token.json stores the user's access and refresh tokens, and is
 // created automatically when the authorization flow completes for the first
 // time.
-const TOKEN_PATH = '../Backend/token.json';
-
-/**
+const TOKEN_PATH = 'token.json'
+const file = require('../credentials.json')
+  /**
  * Create an OAuth2 client with the given credentials, and then execute the
  * given callback function.
  *
@@ -20,13 +21,9 @@ function authorize(credentials, callback,options={}) {
   const {client_secret, client_id, redirect_uris} = credentials.installed;
   const oauth2Client = new google.auth.OAuth2(
       client_id, client_secret, redirect_uris[0]);
-
-  // Check if we have previously stored a token.
-  fs.readFile(TOKEN_PATH, (err, token) => {
-    if (err) return getNewToken(oauth2Client, callback);
-    oauth2Client.credentials = JSON.parse(token);
-    callback(oauth2Client,arguments[2]);
-  });
+  const token = require('../token.json')
+    oauth2Client.credentials = token
+  return callback(oauth2Client,options);
 }
 
 /**
@@ -70,21 +67,37 @@ function storeToken(token) {
   });
 }
 
-function getInfoEmail(auth,options){
-      const email = options.email
-      const service = google.admin({version: 'directory_v1', auth});
-      service.users.get({
-       userKey:email
-      }, (err, res) => {
-        if (err) return console.error('The API returned an error:', err.message);
-        const users = res
-        console.log(users)
-      })
-}
+/**
+ * Lists the first 10 users in the domain.
+ *
+ * @param {google.auth.OAuth2} auth An authorized OAuth2 client.
+ */
 
-exports.CurrentEmail = (email) => {
-  fs.readFile('../Backend/credentials.json', (err, content) => {
-    if (err) return console.error('Error loading client secret file', err);
-    authorize(JSON.parse(content), getInfoEmail,{email:email});
-  });
+ function getInfoEmail(auth,options={}){
+    const email = options.email
+    const service = google.admin({version: 'directory_v1', auth});
+    const result = service.users.get({
+      userKey:email
+     }, (async (err,res) => {
+      return res
+     }).apply()
+     )
+     return result
+}
+// Mọi hàm phải được qua hàm callapi để trả về giá trị
+exports.YourCompany = async (email) => {
+  const options = {
+    email:email
+  }
+  const value = await authorize(file,getInfoEmail,options)
+  const company = value.data.orgUnitPath.split('/')
+  return company[1]
+}
+exports.YourManager = async(email) => {
+  const options = {
+    email:email
+  }
+  const value = await authorize(file,getInfoEmail,options)
+  const manager = value.data.relations[0].value
+  return manager
 }

@@ -28,7 +28,7 @@ const oAuth2Client = new google.auth.OAuth2(CLIENT_ID, CLIENT_SECRET, REDIRECT_U
         next()
   }).catch(e => {
     if(e)
-      res.status('500')
+      res.status('500').send({err:'fail'})
       console.log('fail')
   })
 })
