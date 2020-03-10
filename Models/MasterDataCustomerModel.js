@@ -105,7 +105,7 @@ class MasterDataCustomerModel extends Model {
             if(err)
             console.log(err)
         })
-        process.exec(`powershell -Command "java -jar ${diapi}"`);
+        process.exec(`java -d32 -jar -client ${diapi}`);
         // const title = '\ufeffCardCode\tCardCode01\tCardName\tGroupCode\tCmpPrivate\tFederalTaxID\tPhone1\tPhone2\tTel1\tTel2\tFax\tGroupNum\tCreditLine\tStreetNo\tStreet\tBlock\tState\tCity\tCountry\tName\n'
         // const data = `${CardCode}\t${CardCode}\t${CardName}\t${GroupCode}\t${CmpPrivate}\t${LicTradNum}\t${Phone1}\t${Phone2}\t${Tel1}\t${Tel2}\t${Fax}\t${GroupNum}\t${CreditLine}\t${StreetNo}\t${Street}\t${Block}\t${State}\t${City}\t${Country}\t${Name}`
         // const stringfile = title+title+data
