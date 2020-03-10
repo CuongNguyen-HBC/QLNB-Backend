@@ -101,3 +101,11 @@ exports.YourManager = async(email) => {
   const manager = value.data.relations[0].value
   return manager
 }
+exports.YourFullName = async (email) => {
+  const options = {
+    email:email
+  }
+  const value = await authorize(file,getInfoEmail,options)
+  const manager = value.data.relations[0].value
+  
+}

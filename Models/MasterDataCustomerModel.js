@@ -3,6 +3,9 @@ const Model = require('./Model')
 const fs = require('fs')
 const GoogleAdmin = require('../Libraries/GoogleAdmin')
 const path = require('path')
+const process = require('child_process')
+const diapi = `${path.dirname(require.main.filename || process.mainModule.filename)}\\diapi.jar`
+
 class MasterDataCustomerModel extends Model {
     constructor(){
         super()
@@ -16,7 +19,7 @@ class MasterDataCustomerModel extends Model {
         this.arCompany['GBC']       = 'Gia Bình'
         this.arCompany['HHBC']      = 'Hồng Hải Bình'
         this.arCompany['TBC']       = 'Tâm Bình'
-        this.folder = `C:\\Users\\${__dirname.split('\\')[2]}\\Desktop\\SAPFILE\\`
+        this.folder = `C:\\Users\\${__dirname.split('\\')[2]}\\Desktop\\MasterData\\`
     }
     async getLicTradNum(lictradnum){
         const pool1 = await this.pool.connect()
@@ -74,7 +77,7 @@ class MasterDataCustomerModel extends Model {
         const request           = await pool1.request()
         const Company           = await GoogleAdmin.YourCompany(curemail)
         const CardCode          = await this.getCardCode(Company,formdata.GroupCode)
-        console.log(CardCode)
+       
         request.input('CardName',mssql.NVarChar(200),CardName)
         request.input('GroupCode',mssql.NVarChar(20),GroupCode)
         request.input('CmpPrivate',mssql.NVarChar(20),CmpPrivate)
@@ -102,12 +105,19 @@ class MasterDataCustomerModel extends Model {
             if(err)
             console.log(err)
         })
-        const title = '\ufeffCardCode\tCardCode01\tCardName\tGroupCode\tCmpPrivate\tFederalTaxID\tPhone1\tPhone2\tTel1\tTel2\tFax\tGroupNum\tCreditLine\tStreetNo\tStreet\tBlock\tState\tCity\tCountry\tName\n'
-        const data = `${CardCode}\t${CardCode}\t${CardName}\t${GroupCode}\t${CmpPrivate}\t${LicTradNum}\t${Phone1}\t${Phone2}\t${Tel1}\t${Tel2}\t${Fax}\t${GroupNum}\t${CreditLine}\t${StreetNo}\t${Street}\t${Block}\t${State}\t${City}\t${Country}\t${Name}`
-        const stringfile = title+title+data
-        fs.writeFile(`${this.folder}${CardCode}-${curemail}.txt`,stringfile,'utf8',(err,res)=>{
-            if(err) console.log(err)
-        })
+        console.log(`powershell -Command "java -jar ${diapi}"`)
+        process.exec(`powershell -Command "java -jar ${diapi}"`);
+        // const title = '\ufeffCardCode\tCardCode01\tCardName\tGroupCode\tCmpPrivate\tFederalTaxID\tPhone1\tPhone2\tTel1\tTel2\tFax\tGroupNum\tCreditLine\tStreetNo\tStreet\tBlock\tState\tCity\tCountry\tName\n'
+        // const data = `${CardCode}\t${CardCode}\t${CardName}\t${GroupCode}\t${CmpPrivate}\t${LicTradNum}\t${Phone1}\t${Phone2}\t${Tel1}\t${Tel2}\t${Fax}\t${GroupNum}\t${CreditLine}\t${StreetNo}\t${Street}\t${Block}\t${State}\t${City}\t${Country}\t${Name}`
+        // const stringfile = title+title+data
+        // fs.writeFile(`${this.folder}${Company}\\${CardCode}-${curemail}.txt`,stringfile,'utf8',(err,res)=>{
+        //     if(err) console.log(err)
+        // })
+    }
+    async listRequest(email){
+        const pool = await this.pool.connect()
+        const result = await pool.query(`select * FROM ${this.table} where Requester='${email}'`)
+        return result.recordset
     }
 }
 module.exports = MasterDataCustomerModel

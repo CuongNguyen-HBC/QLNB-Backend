@@ -8,4 +8,6 @@ app.route('/masterdata-customer')
 .post(ApproveController.FormMasterDataCustomer)
 app.route('/masterdata-customer/lictradnum')
 .post(ApproveController.checkLicTradNum)
+app.route('/masterdata-customer/list-request')
+.get(ApproveController.getList)
 }
