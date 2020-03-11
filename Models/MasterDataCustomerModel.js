@@ -125,6 +125,7 @@ class MasterDataCustomerModel extends Model {
                 process.exec(`java -d32 -jar -client ${diapi}`);
                 setTimeout(async () =>{
                     this.insertSap()
+                    console.log('Inserting ....')
                 },5000)
                 pool1.close()
             }
