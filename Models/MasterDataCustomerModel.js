@@ -115,7 +115,7 @@ class MasterDataCustomerModel extends Model {
     }
     async listRequest(email){
         const pool = await this.pool.connect()
-        const result = await pool.query(`select * FROM ${this.table} where Requester='${email}'`)
+        const result = await pool.query(`select * FROM ${this.table} where Requester='${email}' order by id DESC`)
         return result.recordset
     }
     async insertSap(){
