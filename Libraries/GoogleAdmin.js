@@ -97,7 +97,7 @@ exports.YourManager = async(email) => {
   const options = {
     email:email
   }
-  const manager = 'it@hbc.com.vn';
+  var manager = 'it@hbc.com.vn';
   const value = await authorize(file,getInfoEmail,options)
   if(value.data.relations !== undefined)
    manager = value.data.relations[0].value
