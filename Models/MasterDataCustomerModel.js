@@ -123,10 +123,6 @@ class MasterDataCustomerModel extends Model {
        await pool1.query('select * FROM Request_MasterData_Customer where Status = 0 ').then(res=> {
             if(res.recordset.length >= 0 ){
                 process.exec(`java -d32 -jar -client ${diapi}`);
-                setTimeout(async () =>{
-                    this.insertSap()
-                    console.log('Inserting ....')
-                },5000)
                 pool1.close()
             }
         })
